@@ -1,0 +1,40 @@
+# IntelliJ
+.idea/*
+
+# VS Code
+.vscode/*
+
+# dependecies
+node_modules/*
+
+# build
+dist/*
+
+# folders
+docs/*
+
+# environment files
+.env
+.env.dev
+.env.development
+.env.prod
+.env.production
+.example.env
+LICENSE
+nodemon.json
+README.md
+mise.toml
+eslint.config.js
+.prettierc
+.prettierignore
+
+# docker
+.dockerignore
+docker-compose.yml
+Dockerfile
+
+# git
+.git
+.gitignore
+.gitattributes
+.githooks/*

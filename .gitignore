@@ -1,0 +1,17 @@
+# VS Code
+.vscode/*
+!.vscode/launch.json
+
+# dependecies
+node_modules
+dist
+
+# environment files
+.env
+.env.prod
+.env.production
+.env.dev
+.env.development
+
+# files
+logs

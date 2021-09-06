@@ -1,0 +1,29 @@
+services:
+
+    server:
+        build:
+            context: .
+            dockerfile: Dockerfile
+            args:
+                - PORT=4000
+        image: express:0.0.0
+        container_name: express
+        hostname: express
+        restart: unless-stopped
+        expose:
+            - 4000
+        environment:
+            NODE_ENV: "production"
+            APP_NAME: "ts-express"
+            APP_VERSION: "1.0.1"
+            JWT_SECRET_KEY: "production"
+            JWT_EXPIRATION: "12h"
+        ports:
+            - "9000:4000"
+        networks:
+            - backend
+
+networks:
+    backend:
+        name: backend
+        driver: bridge

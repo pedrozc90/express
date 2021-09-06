@@ -1,0 +1,64 @@
+{
+    // Visit https://aka.ms/tsconfig to read more about this file
+    "extends": "@tsconfig/node-ts/tsconfig.json",
+    "compilerOptions": {
+        /* --- File Layout --- */
+        "rootDir": "./src",
+        "outDir": "./dist",
+
+        /* --- Environment Settings --- */
+        // See also https://aka.ms/tsconfig/module
+        // "module": "nodenext",
+        // "moduleResolution": "nodenext",
+        // "target": "es2024",
+        // "lib": ["esnext"],
+        // "types": ["node"],
+        
+        /* --- Module Interop --- */
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "moduleDetection": "force",
+        "noUncheckedSideEffectImports": true,
+        "verbatimModuleSyntax": false, // conflicts with "esModuleInterop"
+
+        /* --- Output --- */
+        "sourceMap": true,
+        // "declaration": true,    // only needed if publishing as a lib
+        // "declarationMap": true, // only needed if publishing as a lib
+
+        /* --- Strict Type Checking --- */
+        "strict": true,
+        "noUncheckedIndexedAccess": true,
+        "noPropertyAccessFromIndexSignature": true,
+        "exactOptionalPropertyTypes": true,
+        "allowSyntheticDefaultImports": true,
+        // "allowImportingTsExtensions":true,
+        "allowArbitraryExtensions": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitReturns": true,
+        "noImplicitOverride": true,
+        "noFallthroughCasesInSwitch": true,
+        "allowUnusedLabels": false,
+        "allowUnreachableCode": false,
+        // "noSideEffectsOnImport": true,
+        // "erasableSyntaxOnly": true,
+        // "noErrorTruncation": true,
+
+        "noEmit": true,
+        "skipLibCheck": true,
+
+        "paths": {
+            "@/*": [ "./src/*" ]
+        }
+    },
+    "include": [
+        "src/**/*.ts",
+        "src/**/*.spec.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
+}
