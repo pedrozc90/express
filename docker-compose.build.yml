@@ -1,0 +1,23 @@
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: express:dev
+        # container_name: express
+        ports:
+            - "4000:4000"
+        environment:
+            NODE_ENV: production
+            PORT: 4000
+            DATABASE_URL: postgresql://postgres:postgres@postgres/express?schema=public
+            HASHING_SALT: 5
+            HASHING_PEPPER: "Dockerfile"
+        networks:
+            - postgres_network
+
+networks:
+    postgres_network:
+        name: postgres_network
+        driver: bridge
+        external: true

@@ -1,0 +1,98 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client"
+    previewFeatures = [ "partialIndexes" ]
+    output   = "../src/generated"
+}
+
+datasource db {
+    provider = "postgresql"
+}
+
+model Role {
+    id         BigInt   @default(autoincrement()) @id
+    
+    insertedAt DateTime @db.Timestamptz() @default(now()) @map("inserted_at")
+    updatedAt  DateTime @db.Timestamptz() @default(now()) @map("updated_at") @updatedAt
+    version    Int      @default(1)
+
+    name       String   @db.VarChar(255)
+    isDefault  Boolean  @default(false) @map("is_default")
+    permission BigInt   @default(0)
+
+    users      User[]
+
+    @@map("roles")
+    @@unique([name], map: "roles_name_ukey")
+    @@unique([isDefault], map: "roles_is_default_ukey", where: { isDefault: true })
+}
+
+model User {
+    id         BigInt   @default(autoincrement()) @id
+    
+    insertedAt DateTime @db.Timestamptz() @default(now()) @map("inserted_at")
+    updatedAt  DateTime @db.Timestamptz() @default(now()) @map("updated_at") @updatedAt
+    version    Int      @default(1)
+    
+    email      String   @db.VarChar(255)
+    password   String   @db.VarChar(64)
+    active     Boolean  @default(true)
+
+    roleId     BigInt   @map("role_id")
+    role       Role     @relation(fields: [roleId], references: [id], map: "users_role_fkey")
+
+    tokens     RefreshToken[]
+
+    @@map("users")
+    @@unique([email], map: "users_email_ukey")
+}
+
+model RefreshToken {
+    id         BigInt   @default(autoincrement()) @id
+    
+    insertedAt DateTime @db.Timestamptz() @default(now()) @map("inserted_at")
+    updatedAt  DateTime @db.Timestamptz() @default(now()) @map("updated_at") @updatedAt
+    version    Int      @default(1)
+
+    token      String   @db.Text
+    expiresAt  DateTime @map("expires_at")
+
+    userId     BigInt   @map("user_id")
+    user       User     @relation(fields: [userId], references: [id], map: "revoked_tokens_user_fkey")
+
+    @@map("refresh_tokens")
+    @@unique([token], map: "refresh_token_ukey")
+}
+
+enum StorageFileType {
+    local
+    bucket
+}
+
+model StoredFile {
+    id          BigInt   @default(autoincrement()) @id
+    
+    insertedAt  DateTime @db.Timestamptz() @default(now()) @map("inserted_at")
+    updatedAt   DateTime @db.Timestamptz() @default(now()) @map("updated_at") @updatedAt
+    version     Int      @default(1)
+
+    // bucket
+    storageType StorageFileType @default(local) @map("storage_type")
+    objectKey   String?  @db.VarChar(1000) @map("object_key")
+    etag        String?  @db.VarChar(255) @map("etag")
+
+    // metadata
+    hash        String   @db.VarChar(64)
+    filename    String   @db.VarChar(255)
+    contentType String   @db.VarChar(255) @map("content_type")
+
+    content     Bytes?   @db.ByteA
+    size        BigInt   @default(0)
+
+    @@map("stored_files")
+    @@unique([hash], map: "stored_files_hash_ukey")
+    @@index([objectKey], map: "stored_files_object_key_idx")
+    @@index([etag], map: "stored_files_etag_idx")
+}
