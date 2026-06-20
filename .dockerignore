@@ -1,0 +1,32 @@
+# IntelliJ
+.idea
+
+# VS Code
+.vscode
+
+# Node
+dist
+node_modules
+
+# Prisma
+src/generated
+
+# Git
+.git
+.gitignore
+.gitattributes
+.gitmodules
+
+# Docker
+docker-compose.yml
+.dockerignore
+
+# Files
+test
+coverage
+.env
+.env.*
+.prettierignore
+.prettierrc
+Makefile
+mise.toml

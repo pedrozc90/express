@@ -1,0 +1,11 @@
+#!/bin/sh
+set -eu
+
+echo "Running format check..."
+npm run format
+
+echo "Running lint..."
+npm run lint
+
+echo "Running type check..."
+npm run type-check

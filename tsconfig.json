@@ -1,0 +1,61 @@
+{
+    // Visit https://aka.ms/tsconfig to read more about this file
+    "compilerOptions": {
+        /* --- File Layout --- */
+        "rootDir": "./src",
+        // "outDir": "./dist",
+
+        /* --- Environment Settings --- */
+        // See also https://aka.ms/tsconfig/module
+        "module": "esnext",
+        "moduleResolution": "bundler",
+        "target": "esnext",
+        "lib": ["esnext"],
+        "types": ["node"],
+
+        /* --- Other Outputs --- */
+        "sourceMap": true,
+        "declaration": false, // only needed if publishing as a lib
+        "declarationMap": false, // only needed if publishing as a lib
+
+        /* --- Module Interop --- */
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "moduleDetection": "force",
+        "verbatimModuleSyntax": true,
+        "rewriteRelativeImportExtensions": true,
+        "allowImportingTsExtensions": true,
+        "allowArbitraryExtensions": true,
+        "ignoreDeprecations": "6.0",
+
+        /* --- Strict Type Checking --- */
+        "strict": true,
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,
+        "noImplicitReturns": true,
+        "noImplicitOverride": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true,
+        "noPropertyAccessFromIndexSignature": true,
+        "noUncheckedSideEffectImports": true,
+        "allowSyntheticDefaultImports": true,
+        "allowUnusedLabels": false,
+        "allowUnreachableCode": false,
+        "erasableSyntaxOnly": true,
+        "noErrorTruncation": true,
+
+        /* --- Others --- */
+        "noEmit": true,
+        "skipLibCheck": true,
+
+        /* --- Imports --- */
+        "paths": {
+            // "@/*": ["./src/*"],
+            // "@datasource": ["./src/generated/*"]
+        }
+    },
+    "include": ["./src/**/*.ts"],
+    "exclude": ["dist/*", "node_modules/*"]
+}
