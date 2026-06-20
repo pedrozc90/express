@@ -1,5 +1,5 @@
 import app from "./app";
-import { prisma } from "./libs";
+import { prisma } from "./infra/database";
 import { settings } from "./settings";
 
 const { port } = settings;

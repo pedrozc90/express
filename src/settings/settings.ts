@@ -1,6 +1,6 @@
 import pkg from "../../package.json" with { type: "json" };
-import type { CorsSettings, DatabaseSettings, HashingSettings, JwtExpiresIn, JwtSettings, Settings } from "../types";
-import { toBoolean, toInt } from "../utils";
+import type { CorsSettings, DatabaseSettings, HashingSettings, JwtExpiresIn, JwtSettings, Settings } from "../shared/types";
+import { toBoolean, toInt } from "../shared/utils";
 
 function readEnv(name: string): string | undefined;
 function readEnv(name: string, defaultValue: string): string;

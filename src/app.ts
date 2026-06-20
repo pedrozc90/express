@@ -6,8 +6,8 @@ import helmet from "helmet";
 import path from "path";
 
 import { settings } from "./settings";
-import { FileRouter, IndexRouter, RoleRouter, UserRouter } from "./routes";
-import { error, notFound } from "./middlewares";
+import { error, notFound } from "./infra/http/middlewares";
+import { router } from "./infra/http/router";
 
 /* --- Constants --- */
 const dirname = import.meta.dirname; // __dirname;
@@ -34,10 +34,7 @@ app.use(helmet());
 app.use(cors({ origin: settings.cors.origin, credentials: true }));
 
 // routes
-app.use("/", IndexRouter);
-app.use("/files", FileRouter);
-app.use("/users", UserRouter);
-app.use("/roles", RoleRouter);
+app.use("/", router);
 
 // catch non-existant endpoints
 app.use(notFound);
