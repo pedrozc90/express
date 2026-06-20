@@ -4,8 +4,8 @@ import { AuthService, RefreshTokenRepository } from "../../domains/auth";
 import { UserService } from "../../domains/user";
 import { HashUtils } from "../../shared/utils";
 
-vi.mock("../services/user.service", async () => {
-    const actual = await vi.importActual("../services/user.service");
+vi.mock("../user/user.service", async () => {
+    const actual = await vi.importActual<typeof import("../user/user.service")>("../user/user.service");
     return {
         ...actual,
         get: vi.fn(),
@@ -17,8 +17,7 @@ vi.mock("../services/user.service", async () => {
     };
 });
 
-vi.mock("../repos/refresh-token.repository", async () => {
-    // const actual = await vi.importActual("../repos/refresh-token.repository");
+vi.mock("./refresh-token.repository", () => {
     return {
         findOne: vi.fn(),
         create: vi.fn(),
@@ -29,10 +28,10 @@ vi.mock("../repos/refresh-token.repository", async () => {
 const createUser = async (): Promise<User> => {
     const now = new Date();
     return {
-        id: 0n,
+        id: 1n,
         insertedAt: now,
         updatedAt: now,
-        version: 0,
+        version: 1,
         email: "vitest@email.com",
         password: await HashUtils.hash("password"),
         active: true,
@@ -40,15 +39,15 @@ const createUser = async (): Promise<User> => {
     };
 };
 
-const createToken = async (user: User): Promise<RefreshToken & { user: User }> => {
+const createToken = (user: User): RefreshToken & { user: User } => {
     const now = new Date();
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + 7);
     return {
-        id: 0n,
+        id: 1n,
         insertedAt: now,
         updatedAt: now,
-        version: 0,
+        version: 1,
         token: "fake",
         expiresAt: expiresAt,
         userId: user.id,
@@ -64,6 +63,7 @@ describe("AuthService", () => {
     it("Login", async () => {
         const mockUser = await createUser();
         vi.mocked(UserService.get).mockResolvedValue(mockUser as any);
+        vi.mocked(RefreshTokenRepository.create).mockResolvedValue(createToken(mockUser));
 
         const res = await AuthService.login("vitest@email.com", "password");
         expect(res).toBeTypeOf("object");
@@ -71,7 +71,17 @@ describe("AuthService", () => {
         expect(res.refreshToken).toBeTypeOf("string");
     });
 
+    it("Login - inactive user", async () => {
+        const mockUser = await createUser();
+        vi.mocked(UserService.get).mockResolvedValue({ ...mockUser, active: false } as any);
+
+        await expect(AuthService.login("vitest@email.com", "password")).rejects.toMatchObject({
+            message: "Account is inactive",
+        });
+    });
+
     it("Logout", async () => {
+        vi.mocked(RefreshTokenRepository.remove).mockResolvedValue(1);
         const res = await AuthService.logout(0n);
         expect(res).toBeTypeOf("undefined");
     });
@@ -79,8 +89,8 @@ describe("AuthService", () => {
     it("Refresh", async () => {
         const mockUser = await createUser();
         const mockToken = createToken(mockUser);
-        vi.mocked(RefreshTokenRepository.findOne).mockResolvedValue(mockToken as any);
-        vi.mocked(RefreshTokenRepository.create).mockResolvedValue(mockToken as any);
+        vi.mocked(RefreshTokenRepository.findOne).mockResolvedValue(mockToken);
+        vi.mocked(RefreshTokenRepository.create).mockResolvedValue(mockToken);
         vi.mocked(RefreshTokenRepository.remove).mockResolvedValue(1);
 
         const res = await AuthService.refresh("fake");

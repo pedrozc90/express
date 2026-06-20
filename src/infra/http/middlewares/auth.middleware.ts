@@ -1,8 +1,8 @@
 import type { NextFunction, Request, RequestHandler, Response } from "express";
 import { AppError } from "../../../shared/errors";
-import { AuthService } from "../../../domains/auth";
-import { UserService } from "../../../domains/user";
-import { RoleService } from "../../../domains/role";
+import * as AuthService from "../../../domains/auth/auth.service";
+import * as UserService from "../../../domains/user/user.service";
+import * as RoleService from "../../../domains/role/role.service";
 
 const AUTHORIZATION = "Authorization";
 const BEARER = "Bearer ";

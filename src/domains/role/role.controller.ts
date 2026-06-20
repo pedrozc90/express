@@ -56,9 +56,7 @@ export const create = async (req: Request, res: Response) => {
 
 export const update = async (req: Request, res: Response) => {
     const id = parseId(req);
-    console.log("UPDATE", req.body);
     const data = removeUndefined(RoleUpdateSchema.parse(req.body));
-    console.log("UPDATE", data);
     const role = await RoleService.update(id, data);
     const result = toDto(role);
     return res.status(200).json(result);

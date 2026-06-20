@@ -2,7 +2,7 @@ import { type User } from "../../generated/client";
 import * as UserRepository from "./user.repository";
 import type { FetchArgs } from "../../shared/types";
 import { HashUtils } from "../../shared/utils";
-import { RoleService } from "../role";
+import { RoleService } from "../role/role.service";
 import { AppError } from "../../shared/errors";
 
 export type UserCreateArgs = Pick<User, "email" | "password">;

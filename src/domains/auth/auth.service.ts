@@ -1,7 +1,7 @@
 import type { RefreshToken } from "../../generated/client";
 import { AppError } from "../../shared/errors";
 import { HashUtils, toBigInt } from "../../shared/utils";
-import { UserService } from "../user";
+import * as UserService from "../user/user.service";
 import * as RefreshTokenRepository from "./refresh-token.repository";
 import * as TokenService from "./token.service";
 
@@ -20,6 +20,10 @@ export interface JwtValidated {
 
 export const login = async (email: string, password: string): Promise<AuthResponse> => {
     const user = await UserService.get({ email });
+
+    if (!user.active) {
+        throw AppError.unauthorized({ message: "Account is inactive" });
+    }
 
     const match = await HashUtils.compare(password, user?.password ?? "");
     if (!match) {
@@ -47,12 +51,16 @@ export const logout = async (userId: bigint): Promise<void> => {
 
 export const validate = async (accessToken: string): Promise<JwtValidated> => {
     const decoded = TokenService.decode(accessToken);
+    const userId = toBigInt(decoded.userId);
+    if (!userId) {
+        throw AppError.unauthorized({ message: "Invalid token: missing user id" });
+    }
     return {
         subject: decoded.sub,
         issuer: decoded.iss,
         issuedAt: new Date(decoded.iat * 1_000),
         expiresAt: new Date(decoded.exp * 1_000),
-        userId: toBigInt(decoded.userId) ?? 0n,
+        userId,
     };
 };
 
@@ -91,7 +99,7 @@ export const refresh = async (token: string): Promise<AuthResponse> => {
 
     const deleted = await RefreshTokenRepository.remove({ token: hashed, userId });
 
-    // token was't found - possible reuse attack
+    // token wasn't found - possible reuse attack
     if (!deleted) {
         await RefreshTokenRepository.remove({ userId });
         throw AppError.unauthorized({ message: "Refresh token reuse detected" });

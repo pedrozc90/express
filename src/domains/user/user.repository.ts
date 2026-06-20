@@ -21,18 +21,19 @@ export const findOne = async (where: UserGetParams): Promise<UserWithRole | null
 export const fetch = async ({ p = 1, r = 15, q }: FetchArgs): Promise<Page<User>> => {
     const limit = r;
     const offset = Math.max((p - 1) * r, 0);
-    return prisma.user
-        .findMany({
-            where: {
-                ...(typeof q === "string" && q.length ? { email: { contaits: q, mode: "insensitive" } } : {}),
-            },
+    const where = {
+        ...(typeof q === "string" && q.length ? { email: { contains: q, mode: "insensitive" as const } } : {}),
+    };
+    const [list, total] = await prisma.$transaction([
+        prisma.user.findMany({
+            where,
             skip: offset,
             take: limit,
-            orderBy: {
-                email: "asc",
-            },
-        })
-        .then((res) => createPage<User>(p, r, res));
+            orderBy: { email: "asc" },
+        }),
+        prisma.user.count({ where }),
+    ]);
+    return createPage<User>(p, r, list, total);
 };
 
 export const create = async (data: Pick<User, "email" | "password"> & { role: Role }): Promise<User> => {

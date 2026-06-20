@@ -4,23 +4,23 @@ import type { User } from "../../generated/client";
 import app from "../../app";
 import * as UserService from "./user.service";
 
-vi.mock("../services", async () => {
-    const actual = await vi.importActual("../services");
+vi.mock("./user.service", async () => {
+    const actual = await vi.importActual<typeof import("./user.service")>("./user.service");
     return {
         ...actual,
-        UserService: {
-            get: vi.fn(),
-            fetch: vi.fn(),
-            create: vi.fn(),
-            update: vi.fn(),
-            remove: vi.fn(),
-            getPermission: vi.fn(),
-        },
+        get: vi.fn(),
+        fetch: vi.fn(),
+        create: vi.fn(),
+        update: vi.fn(),
+        remove: vi.fn(),
+        getPermission: vi.fn(),
     };
 });
 
-vi.mock("../middlewares", async () => {
-    const actual = await vi.importActual("../middlewares");
+vi.mock("../../infra/http/middlewares/auth.middleware", async () => {
+    const actual = await vi.importActual<typeof import("../../infra/http/middlewares/auth.middleware")>(
+        "../../infra/http/middlewares/auth.middleware",
+    );
     return {
         ...actual,
         authorized: (_req: any, _res: any, next: any) => {
@@ -36,7 +36,7 @@ const createUser = (): User => {
         id: 1n,
         insertedAt: new Date(),
         updatedAt: new Date(),
-        version: 0,
+        version: 1,
         email: "test@example.com",
         password: "hidden",
         active: true,
@@ -52,7 +52,7 @@ describe("UserController", () => {
     it("GET /users/:id returns a user", async () => {
         vi.mocked(UserService.get).mockResolvedValue(createUser() as any);
 
-        const res = await request(app).get("/users/1").set("Authorization", "Bearer fake-token");
+        const res = await request(app).get("/users/1").set("Authorization", "******");
 
         expect(res.status).toBe(200);
     });

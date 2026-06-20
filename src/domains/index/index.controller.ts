@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { AuthService, LoginSchema, RefrehSchema } from "../auth";
+import { AuthService, LoginSchema, RefreshSchema } from "../auth";
 import { settings } from "../../settings";
 import { getTimezone, PrismaUtils, toBigInt } from "../../shared/utils";
 import { UserService, toUserDto } from "../user";
@@ -59,7 +59,7 @@ export const login = async (req: Request, res: Response) => {
 };
 
 export const refresh = async (req: Request, res: Response) => {
-    const data = RefrehSchema.parse(req.body);
+    const data = RefreshSchema.parse(req.body);
     const result = await AuthService.refresh(data.refresh_token);
     return res.status(200).json(result);
 };

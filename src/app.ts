@@ -27,16 +27,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// secure apps by setting varius HTTP headers
+// secure apps by setting various HTTP headers
 app.use(helmet());
 
-// enabl CORS (Cross Origin Resource Sharing)
-app.use(cors({ origin: settings.cors.origin, credentials: true }));
+// enable CORS (Cross Origin Resource Sharing)
+if (settings.cors.enabled) {
+    app.use(cors({ origin: settings.cors.origin, credentials: true }));
+}
 
 // routes
 app.use("/", router);
 
-// catch non-existant endpoints
+// catch non-existent endpoints
 app.use(notFound);
 
 // error handler, if any route throws a error, it should be pass through this middleware

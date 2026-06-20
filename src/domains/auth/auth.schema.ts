@@ -15,6 +15,6 @@ export const JwtDecodedSchema = z.object({
 
 export type JwtDecoded = z.output<typeof JwtDecodedSchema>;
 
-export const RefrehSchema = z.object({
+export const RefreshSchema = z.object({
     refresh_token: z.string(),
 });

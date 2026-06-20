@@ -18,18 +18,19 @@ export const findOne = async (where: Pick<Role, "id"> | Pick<Role, "name"> | Pic
 export const fetch = async ({ p = 1, r = 15, q }: FetchArgs): Promise<Page<Role>> => {
     const limit = r;
     const offset = Math.max((p - 1) * r, 0);
-    return prisma.role
-        .findMany({
-            where: {
-                ...(typeof q === "string" && q.length ? { name: { contaits: q, mode: "insensitive" } } : {}),
-            },
+    const where = {
+        ...(typeof q === "string" && q.length ? { name: { contains: q, mode: "insensitive" as const } } : {}),
+    };
+    const [list, total] = await prisma.$transaction([
+        prisma.role.findMany({
+            where,
             skip: offset,
             take: limit,
-            orderBy: {
-                name: "asc",
-            },
-        })
-        .then((res) => createPage<Role>(p, r, res));
+            orderBy: { name: "asc" },
+        }),
+        prisma.role.count({ where }),
+    ]);
+    return createPage<Role>(p, r, list, total);
 };
 
 export const create = async (data: RoleCreateArgs): Promise<Role> => {

@@ -34,19 +34,19 @@ export const getContent = async (id: bigint) => {
 export const fetch = async ({ p = 1, r = 15, q }: FetchArgs): Promise<Page<StoredFile>> => {
     const limit = r;
     const offset = Math.max((p - 1) * r, 0);
-
-    return prisma.storedFile
-        .findMany({
-            where: {
-                ...(typeof q === "string" && q.trim().length ? { filename: { contains: q.trim(), mode: "insensitive" } } : {}),
-            },
-            orderBy: {
-                id: "asc",
-            },
+    const where = {
+        ...(typeof q === "string" && q.trim().length ? { filename: { contains: q.trim(), mode: "insensitive" as const } } : {}),
+    };
+    const [list, total] = await prisma.$transaction([
+        prisma.storedFile.findMany({
+            where,
+            orderBy: { id: "asc" },
             skip: offset,
             take: limit,
-        })
-        .then((res) => createPage<StoredFile>(p, r, res));
+        }),
+        prisma.storedFile.count({ where }),
+    ]);
+    return createPage<StoredFile>(p, r, list, total);
 };
 
 export const create = async ({

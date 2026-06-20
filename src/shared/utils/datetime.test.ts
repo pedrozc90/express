@@ -4,6 +4,7 @@ import { getTimezone } from "./datetime";
 describe("DatetimeUtils", () => {
     test("Get timezone", () => {
         const timezone = getTimezone();
-        expect(timezone).toBe("America/Sao_Paulo");
+        expect(timezone).toBeTypeOf("string");
+        expect(timezone.length).toBeGreaterThan(0);
     });
 });

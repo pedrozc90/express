@@ -7,7 +7,7 @@ export interface Page<T> {
     list: T[];
 }
 
-export const createPage = <T>(page: number, rows: number, list: T[], count: number = 0): Page<T> => {
+export const createPage = <T>(page: number, rows: number, list: T[], count?: number): Page<T> => {
     return { page, rows, count: count ?? list.length, list };
 };
 
@@ -27,7 +27,7 @@ export interface FetchArgs {
 }
 
 export const FetchArgsSchema = z.object({
-    p: z.number().min(1).optional(),
-    r: z.number().min(10).optional(),
+    p: z.coerce.number().min(1).optional(),
+    r: z.coerce.number().min(10).optional(),
     q: z.string().optional(),
 }) as z.ZodType<FetchArgs>;

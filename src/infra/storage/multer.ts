@@ -13,7 +13,8 @@ export const middleware = multer({
     fileFilter: (_res, file, cb) => {
         if (!ALLOWED.includes(file.mimetype)) {
             cb(new AppError({ status: "NOT_ACCEPTABLE", message: "unsupported file type." }));
-            return cb(null, true);
+            return;
         }
+        cb(null, true);
     },
 });

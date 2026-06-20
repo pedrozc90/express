@@ -89,7 +89,7 @@ export const create = async (data: RoleCreateOutput): Promise<Role> => {
 export const update = async (id: bigint, input: RoleUpdateOutput): Promise<Role> => {
     const { name, tags } = input;
 
-    if (!name || name.trim().length === 0) {
+    if (name !== undefined && name.trim().length === 0) {
         throw AppError.badRequest({ message: `name '${name}' is invalid.` });
     }
 
@@ -115,7 +115,7 @@ export const update = async (id: bigint, input: RoleUpdateOutput): Promise<Role>
 export const remove = async (id: bigint): Promise<Role> => {
     const role = await get({ id });
     if (role.isDefault) {
-        throw new AppError({ status: "NOT_ACCEPTABLE", message: "It is not allowed to remove detaul role" });
+        throw new AppError({ status: "NOT_ACCEPTABLE", message: "It is not allowed to remove the default role" });
     }
     return RoleRepository.remove(id);
 };
