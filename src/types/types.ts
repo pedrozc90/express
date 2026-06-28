@@ -32,6 +32,7 @@ export function createHealthCheck({ name, version, env = "development", timestam
 	});
 
 	const parts = Object.fromEntries(formatter.formatToParts(timestamp).map(({ type, value }) => [type, value]));
+	console.log("parts", parts);
 
 	return {
 		env,

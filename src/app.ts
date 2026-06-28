@@ -5,9 +5,9 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import helmet from "helmet";
 
-import * as pkg from "../package.json";
-import RootRouter from "./routes/index.router";
-import FileStorageRouter from "./routes/file-storage.router";
+import pkg from "../package.json" with { type: "json" };
+import RootRouter from "./routes/index.router.ts";
+import FileStorageRouter from "./routes/file-storage.router.ts";
 import { errorHandler, loggerHandler } from "./middlewares";
 
 // create express server

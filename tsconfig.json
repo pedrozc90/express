@@ -36,7 +36,7 @@
         // "allowImportingTsExtensions":true,
         "allowArbitraryExtensions": true,
         "noUnusedLocals": true,
-        "noUnusedParameters": true,
+        "noUnusedParameters": false,
         "noImplicitReturns": true,
         "noImplicitOverride": true,
         "noFallthroughCasesInSwitch": true,

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 
-import { upload } from "../controllers/file-storage.controller";
+import { upload } from "../controllers/file-storage.controller.ts";
 
 // Multer middleware configuration
 const storage = multer.memoryStorage();

@@ -12,7 +12,3 @@ export const healthCheck = (req: Request, res: Response) => {
 	const result: HealthCheck = createHealthCheck({ name, version, env });
 	res.status(HttpStatus.OK).json(result);
 };
-
-export const badRequest = (req: Request, res: Response) => {
-	throw new Error("Method Not Implemented.");
-};

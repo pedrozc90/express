@@ -1,6 +1,6 @@
 import http from "http";
 
-import app from "./app.js";
+import app from "./app.ts";
 
 export const DI = {} as {
 	server: http.Server;
